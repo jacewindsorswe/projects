@@ -1,0 +1,98 @@
+This file goes over the details of the CoreTokenizer project.
+
+This project was written by Jace Windsor on 2/7-2/8 2023.
+
+The design of this program is based on the transitions of the FSA that was
+created in the earlier homework. There are definitions for accepting states
+based on the type of token as well as definitions for the characters that are 
+permitted to be used in each type of identifier. These can be found before the 
+class declaration inside of TokenScanner.py. 
+
+The tokenizer creates token objects from a user-specified input file.
+To use it, simply provide the file you would like to generate tokens from as
+a command line argument (further clarification on this process can be found
+in README.txt). The output will consist of the ID associated with the token 
+as it is defined in the project description. The ID numbers are associated with
+the order in which they appear on the project description, with "program" being 1
+and a bad token being 34. If more clarification is needed, check the TokenScanner
+dictionary definitions and their associated indexs (+1 due to python indexing
+beginning at 0). The scanner goes line by line from the input file and generates
+the tokens on a per-line basis, but doesn't consume the tokens until skipToken is
+called. If the scanner comes across a string of characters that invalidates a token,
+it will immediately stop and throw an error. Information for what caused the error
+can be seen using the debug directive as described in the readme, otherwise only
+the tokenID is displayed.
+
+I tested the program by generating many combinations of tokens within text files
+and gave them as input, then reviewed the output by hand. The biggest issue I had
+during the development cycle was getting the special symbol interactions to 
+function on a greedy basis (i.e. to consume symbol tokens up to a valid state
+and also recognize when a symbol was only one char).
+
+I am not aware of any bugs at the time of writing this, but there is one thing 
+I would like to note. In main.py, there is a comment explaining a design choice
+that I decided on after researching for many hours. The parsing methods in Python
+do not have a seperate EOF indicator like the ones that can be found in languages
+like C. I go into more explaination as to why this is an issue in that comment.
+The solution I decided on was to create a temporary file that is exactly the same
+as the user specified file, but stripped of blank lines. This file is then
+deleted after the EOF/bad token point is hit. The project description said to 
+consume blank lines as they appeared, but I was not able to find a solution that
+allowed for that interaction while also being able to generate the EOF token at
+the appropriate time/place. I found it to be a sufficient solution to the
+limitations caused by the design choice of Python wihtout invalidating the
+requirements of the project, seeing as the scanner still handles the other 
+whitespace characters without issue.
+
+Below are class methods and descriptions of their functionality/return type:
+
+    class Token:
+
+        void displayLiteral() - prints the token string as it appears at method call.
+
+        str returnLiteral() - returns the token string as it appears at method call.
+
+        void displayID() - prints the token id as it appears at method call.
+
+        int returnID() - returns the token id as it appears at method call.
+
+        TokenType getType() - returns the enum value corresponding with the
+                        type of the token.
+    
+    class TokenScanner:
+
+        int getToken() - returns the ID of the token that is "next-up" in the 
+                        scanners data structure
+
+        void skipToken() - skips to the next token in the data structure; if file
+                        is not EOF and the end of the current line has been
+                        reached, skipToken generates a new line of tokens.
+
+        int intVal() - returns the integer value of a "next-up" token with ID 31.
+                        prints error message if called on any other token.
+
+        str idName() - returns the string literal of a "next-up" token with ID 32.
+                        prints error message if called on any other token.
+
+        boolean atEOF() - returns True if the file is finished being parsed or a 
+                        bad token was parsed, effectively halting the program.
+
+        Token[] tokenizeLine() - parses a line of text character by character to
+                        produce an array of corresponding tokens. Also generates
+                        EOF tokens when appropriate and Bad Token identifiers if
+                        needed.
+        
+        characterType classifyChars() - returns the enum value corresponding with
+                        a character.
+
+        void handleLL() - handles a lowercase char.
+
+        void handleUL() - handles an uppercase char.
+        
+        Tuple handleSS() - handles a symbol char (see comment for implementation
+                        explaination, it is somewhat verbose).
+
+        void handleDD() - handles a digit char.
+
+
+

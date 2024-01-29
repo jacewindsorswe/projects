@@ -1,0 +1,6 @@
+This project showcases code written in C to create and manage a grocery store database via a linked list data structure.
+The guidelines to this project required methods be a maximum of 10 executed lines, providing
+more readability and easier debugging.
+The main purpose of this project was to get comfortable with reference and pointers, with the instructor intentionally
+designing the project around the use of a quadruple pointer. Other areas of focus were debugging using GDB, generation
+of data structures from exising files,
